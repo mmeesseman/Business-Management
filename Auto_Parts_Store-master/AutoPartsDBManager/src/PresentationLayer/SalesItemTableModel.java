@@ -4,16 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import BusinessLayer.InvoiceLineItem;
-import BusinessLayer.Product;
-import BusinessLayer.Supplier;
+
 import DatabaseLayer.DAOFactory;
 import DatabaseLayer.DatabaseReader;
 import DatabaseLayer.ReaderDAO;
 
-/**
- * Extends AbstartTableModel to build a table for sales item Frame.
- * Written by Michael Meesseman
- */
+
 public class SalesItemTableModel extends AbstractTableModel {
 	
 				

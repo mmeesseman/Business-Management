@@ -259,25 +259,18 @@ public class SalesItemForm extends JDialog{
 			    	
 
 			    	//verifies qty is in stock before sale.
-			    	String qtyInStockString = readerDAO.getQtyInStock(Integer.parseInt(productIDField.getText()));
-			    	Integer qtyInStock = Integer.parseInt(qtyInStockString);
+			    	
 			    	
 			    	boolean inStock = false;
 			    	
-			    	if (Integer.parseInt(purchasedQtyField.getText()) <= qtyInStock && ValidateInteger.validateInteger(purchasedQtyField, this))
-			    		inStock = true;
-			    	else
-			    	{
-			    		inStock = false;
-			    		JOptionPane.showMessageDialog(this, "Quantity Listed for that Item is not in Stock.");
-			    	}
+			    	
 			    	
 			    	
 			    	if(dataEntered  && ValidateInteger.validateInteger(purchasedQtyField, this) && inStock) {
 
 			    	System.out.println("In SalesItemForm - processData");
 			    	System.out.println("dataEntered: " + dataEntered);
-			    	writerDAO.manageEnteringToAccountingSales(invoiceNumber, purchasedQuantity, productID);
+			    	//writerDAO.manageEnteringToAccountingSales(invoiceNumber, purchasedQuantity, productID);
 			    		dispose();
 			    	
 			    	}

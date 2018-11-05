@@ -23,11 +23,7 @@ import DatabaseLayer.DAOFactory;
 import DatabaseLayer.DatabaseReader;
 import DatabaseLayer.ReaderDAO;
 
-/**
- * Extends JFrame to build a frame for login.
- * Calls several methods to build the frame.
- * Written by Michael Meesseman
- */
+
 public class LoginFrame extends JFrame {
 	
 	//field initialization
@@ -39,12 +35,7 @@ public class LoginFrame extends JFrame {
 
 	
 	 
-	 /**
-	     * Constructor to build the frame.
-	     * @exception UnsupportedLookAndFeelException	Handles multiple operating system configs.
-	     * @exception SQLException	exception for database queries.
-	     * Written by Michael Meesseman
-	     */
+
 	public LoginFrame() throws UnsupportedLookAndFeelException, SQLException {
         try {
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
@@ -54,7 +45,7 @@ public class LoginFrame extends JFrame {
             System.out.println(e);
         }
         
-        setTitle("Auto Parts Store Login");
+        setTitle("Business Management Login");
         setSize(748, 465);
         setLocationByPlatform(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,12 +56,7 @@ public class LoginFrame extends JFrame {
                 
     }
     
-	/**
-     * Method to build the Button Panel.
-     * @return panel	this is the button panel that goes to the SOUTH of the frame.
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+
     private JPanel buildButtonPanel() throws SQLException {
         JPanel panel = new JPanel();
         
@@ -99,12 +85,7 @@ public class LoginFrame extends JFrame {
         
     }
     
-    /**
-     * Method executes when add button is pressed
-     * @exception UnsupportedLookAndFeelException	Handles multiple operating system configs.
-	 * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+
     private void doLoginButton() throws UnsupportedLookAndFeelException, SQLException {
     	// Test login data
     	
@@ -124,7 +105,7 @@ public class LoginFrame extends JFrame {
 			if (password.equals(readerDAO.obtainPassword(usernameField.getText())))
 			{
 				dispose();
-				AutoPartsStoreFrame gui = new AutoPartsStoreFrame();
+				BusinessManagementFrame gui = new BusinessManagementFrame();
 			}
 				else
 				JOptionPane.showMessageDialog(this, "Username or password was incorrect.",
