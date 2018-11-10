@@ -1,19 +1,6 @@
-/**
- * Class Name:					Invoice
- * Description:					This class contains fields specific
- * 								to this class, along with get/set accessors/mutators, and an 
- * 								overridden toString method.
- * @author Craig Mathes, Michael Meesseman, Richard Stuart
- * @created Saturday, 1,27,2018
- */
+
 package BusinessLayer;
 
-/**
- * This class contains the fields, constructors, get accessors and set mutators necessary
- * 			to create an Invoice object for use by the Database and 
- * 			Presentation layers
- * Written by Rick Stuart
- */
 public class Invoice {
 
 	// Fields
@@ -22,20 +9,24 @@ public class Invoice {
 	private String time;
 	private String customerID;
 	private String employeeID;
+        private String notes;
+        private String comments;
 	
 	// Default Constructor
 	public Invoice() {
-		this("", "", "", "", "");
+		this("", "", "", "", "", "", "");
 	}
 	
 	// Overloaded Constructor
 	public Invoice(String invoiceNumber, String date, String time, 
-			String customerID, String employeeID) {
+			String customerID, String employeeID, String notes, String comments) {
 		this.invoiceNumber = invoiceNumber;
 		this.date = date;
 		this.time = time;
 		this.customerID = customerID;
 		this.employeeID = employeeID;
+                this.notes = notes;
+                this.comments = comments;
 	}
 	
 	// Get and Set Accessors/Mutators
@@ -78,6 +69,23 @@ public class Invoice {
 	public String getEmployeeID() {
 		return employeeID;
 	}
+        
+        public void setNotes(String notes) {
+            this.notes = notes;
+        }
+        
+        public String getNotes(){
+            return notes;
+        }
+        
+        public void setComments(String comments){
+            this.comments = comments;
+        }
+        
+        public String getComments(){
+            return comments;
+        }
+        
 	
 	@Override
 	public String toString() {

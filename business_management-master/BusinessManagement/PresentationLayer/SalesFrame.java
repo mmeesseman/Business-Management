@@ -19,11 +19,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import BusinessLayer.Invoice;
 
-/**
- * Extends JFrame to build a frame for sales tracking.
- * Calls several methods to build the frame.
- * Written by Michael Meesseman
- */
+
 public class SalesFrame extends JFrame {
 	
 	//table initalization
@@ -34,12 +30,7 @@ public class SalesFrame extends JFrame {
     private JTextField searchField;
     private JComboBox searchCombo;
     
-    /**
-     * Constructor to build the frame.
-     * @exception UnsupportedLookAndFeelException	Handles multiple operating system configs.
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+  
     public SalesFrame() throws UnsupportedLookAndFeelException, SQLException {
         try {
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
@@ -61,12 +52,7 @@ public class SalesFrame extends JFrame {
                 
     }
     
-    /**
-     * Method to build the Button Panel.
-     * @return panel	this is the button panel that goes to the SOUTH of the frame.
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+   
     private JPanel buildButtonPanel() throws SQLException {
         JPanel panel = new JPanel();
         
@@ -121,12 +107,7 @@ public class SalesFrame extends JFrame {
         
     }
     
-    /**
-     * Method executes when select button is pressed
-     * @exception UnsupportedLookAndFeelException	Handles multiple operating system configs.
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+   
     private void doSelectButton() throws UnsupportedLookAndFeelException, SQLException {
     	
         	int selectedRow = salesTable.getSelectedRow();
@@ -142,26 +123,22 @@ public class SalesFrame extends JFrame {
     	String time = (String) salesTable.getValueAt(salesTable.getSelectedRow(), 2);
     	String customerID = (String) salesTable.getValueAt(salesTable.getSelectedRow(), 3);
     	String employeeID = (String) salesTable.getValueAt(salesTable.getSelectedRow(), 4);
+        String notes = (String) salesTable.getValueAt(salesTable.getSelectedRow(), 5);
+        String comments = (String) salesTable.getValueAt(salesTable.getSelectedRow(), 6);
     	SalesItemFrame salesItemFrame = new SalesItemFrame(invoiceNumber);
         salesItemFrame.setLocationRelativeTo(this);
         salesItemFrame.setVisible(true);
             }
     }
     
-    /**
-     * Method executes when add button is pressed
-     * Written by Michael Meesseman
-     */
+   
     private void doAddButton() {
-    	SalesForm salesForm = new SalesForm(this, "Add Invoice", true);
+    	SalesForm salesForm = new SalesForm(this, "Add Invoice", false);
         salesForm.setLocationRelativeTo(this);
         salesForm.setVisible(true);
     }
     
-    /**
-     * Method executes when help button is pressed.
-     * Written by Michael Meesseman
-     */
+
     private void doHelpButton()
     {
     	JOptionPane.showMessageDialog(this, "Press the 'Select' button after selecting an invoice to see invoice details. \n"
@@ -172,23 +149,14 @@ public class SalesFrame extends JFrame {
     }
     
     
-    /**
-     * Method to refresh the table from the database.
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+    
     public void fireDatabaseUpdatedEvent() throws SQLException
     {
         ((SalesTableModel) salesTableModel).databaseUpdated();
     }
        
     
-    /**
-     * Method to build the frame table that goes in center.
-     * @return table	JTable to populate database results
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+   
     private JTable buildSalesTable() throws SQLException {
         salesTableModel = new SalesTableModel();
         JTable table = new JTable((javax.swing.table.TableModel) salesTableModel);
@@ -197,16 +165,12 @@ public class SalesFrame extends JFrame {
         return table;
     }
     
-    /**
-	    * Method to build the search panel.
-	    * @return panel	panel which populates the NORTH end of frame.
-	    * Written by Michael Meesseman
-	    */
+
     private JPanel buildSearchPanel() {
  	   
     	// drop down box fields
  	   String[] fields = {"Invoice Number", "Date", 
-	    		"Time", "Customer ID", "Employee ID"};
+	    		"Time", "Customer ID", "Employee ID", "Notes", "Comments"};
  	   
  	   JPanel panel = new JPanel();
  	   
@@ -238,11 +202,6 @@ public class SalesFrame extends JFrame {
  	   return panel;
     }
     
-    /**
-	    * Method executes when search button is pressed
-	    * @exception SQLException	exception for database queries.
-	    * Written by Michael Meesseman
-	    */
     private void doSearchButton() throws SQLException {
  	   
  	   String column;
@@ -265,15 +224,19 @@ public class SalesFrame extends JFrame {
  	   case 4:
  		   column = "employee_employee_id";
  		   break;
+           case 5:
+                   column = "notes";
+                   break;
+           case 6:
+                   column = "comments";
+                   break;
  	   default:
  		   column = "";
  		   break;
  		   
  	   }
  	   
- 	// empty search field refreshes table to all entries.
- 	   // otherwise database is filled with query results from database.
- 	   // if search result does not return a result a dialog box notifies the user. 
+ 	
  	   if(searchField.getText().equals(""))
  		   salesTableModel.reset();
  	   else

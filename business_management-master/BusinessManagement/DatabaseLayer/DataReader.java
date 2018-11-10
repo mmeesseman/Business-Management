@@ -33,10 +33,10 @@ public interface DataReader {
 			String emailAddress);
 	
 	public String obtainNewInvoiceNumber(String date, String time, String customerID,
-			String employeeID);
+			String employeeID, String notes, String comments);
 	public String obtainLineItemID(String invoiceID, String quantityPurchased, 
-			String productID);
+			String serviceItem);
 	
 	public String obtainInvoiceLineID(String invoiceNumber, String purchasedQuantity,
-			String productID);
+			String serviceItem);
 }

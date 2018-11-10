@@ -17,12 +17,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import BusinessLayer.Customer;
+import DatabaseLayer.DAOFactory;
 
-/**
- * Extends JFrame to build a frame for customers tracking.
- * Calls several methods to build the frame.
- * Written by Michael Meesseman
- */
+
 public class CustomerInformationFrame extends JFrame {
     
 	//table initalization
@@ -32,13 +29,9 @@ public class CustomerInformationFrame extends JFrame {
     //search field initialized.
     private JTextField searchField;
     private JComboBox searchCombo;
+    private String selectedCustomerId;
     
-    /**
-     * Constructor to build the frame.
-     * @exception UnsupportedLookAndFeelException	Handles multiple operating system configs.
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+   
     public CustomerInformationFrame() throws UnsupportedLookAndFeelException, SQLException {
         try {
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
@@ -60,14 +53,44 @@ public class CustomerInformationFrame extends JFrame {
                 
     }
     
-    /**
-     * Method to build the Button Panel.
-     * @return panel	this is the button panel that goes to the SOUTH of the frame.
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+        public CustomerInformationFrame(String lookup) throws UnsupportedLookAndFeelException, SQLException, InterruptedException {
+        
+          
+            
+            try {
+            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (ClassNotFoundException | InstantiationException 
+                | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            System.out.println(e);
+        }
+        setTitle("Customer Information");
+        setSize(768, 384);
+        setLocationByPlatform(true);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        add(buildButtonPanel(), BorderLayout.SOUTH);
+        customerTable = buildCustomerTable();
+        add(new JScrollPane(customerTable), BorderLayout.CENTER);
+        add(buildSearchPanel(), BorderLayout.NORTH);
+        setVisible(true);
+        
+          if(lookup.equals("lookup"))
+                this.wait();
+                
+    }
+    
+   
     private JPanel buildButtonPanel() throws SQLException {
         JPanel panel = new JPanel();
+        
+           JButton selectButton = new JButton("Select");
+        selectButton.addActionListener((ActionEvent) -> {
+            doSelectButton(); 
+            
+        });
+    
+        panel.add(selectButton);
     
         //add button
         JButton addButton = new JButton("Add");
@@ -119,21 +142,14 @@ public class CustomerInformationFrame extends JFrame {
         
     }
     
-    /**
-     * Method executes when add button is pressed
-     * Written by Michael Meesseman
-     */ 
+    
     private void doAddButton() {
     	CustomerInfoForm customerForm = new CustomerInfoForm(this, "Add Customer", true);
         customerForm.setLocationRelativeTo(this);
         customerForm.setVisible(true);
     }
     
-    /**
-     * Method executes when edit button is pressed
-     * * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */ 
+    
     private void doEditButton() throws SQLException {
     	int selectedRow = customerTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -149,10 +165,7 @@ public class CustomerInformationFrame extends JFrame {
         }
     }
     
-    /**
-     * Method executes when help button is pressed.
-     * Written by Michael Meesseman
-     */
+    
     private void doHelpButton()
     {
     	JOptionPane.showMessageDialog(this, "Press the 'Add' button to add a customer. \n"
@@ -162,21 +175,31 @@ public class CustomerInformationFrame extends JFrame {
                     "Help Window", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    /**
-     * Method to refresh the table from the database.
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+    private void doSelectButton()
+    {
+        int selectedRow = customerTable.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "No invoice is currently "
+                        + "selected.", "No Invoice selected", JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+    	
+                selectedCustomerId = (String) customerTable.getValueAt(customerTable.getSelectedRow(), 0);
+                this.notifyAll();
+        
+                
+                
+            }
+    
+    }
+    
+  
     public void fireDatabaseUpdatedEvent() throws SQLException {
     	customerTableModel.databaseUpdated();
     }
        
-    /**
-     * Method to build the frame table that goes in center.
-     * @return table	JTable to populate database results
-     * @exception SQLException	exception for database queries.
-     * Written by Michael Meesseman
-     */
+    
    private JTable buildCustomerTable() throws SQLException {
         customerTableModel = new CustomerTableModel();
         JTable table = new JTable((javax.swing.table.TableModel) customerTableModel);
@@ -229,11 +252,7 @@ public class CustomerInformationFrame extends JFrame {
 	   return panel;
    }
    
-   /**
-    * Method executes when search button is pressed
-    * @exception SQLException	exception for database queries.
-    * Written by Michael Meesseman
-    */
+  
    private void doSearchButton() throws SQLException {
 	   
 	   String column;
@@ -286,9 +305,7 @@ public class CustomerInformationFrame extends JFrame {
 		   
 	   }
 	   
-	// empty search field refreshes table to all entries.
- 	   // otherwise database is filled with query results from database.
- 	   // if search result does not return a result a dialog box notifies the user. 
+
 	   if(searchField.getText().equals("")) {
 		   customerTableModel.reset();
 	   }
@@ -300,5 +317,12 @@ public class CustomerInformationFrame extends JFrame {
 	   		customerTableModel.reset();
 	   		}
    }
+
+    String getSelectedCustomerId() {
+        
+        return selectedCustomerId;
+            
+        
+    }
 }
 

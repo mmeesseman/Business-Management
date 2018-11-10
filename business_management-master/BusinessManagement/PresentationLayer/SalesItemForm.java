@@ -36,7 +36,7 @@ public class SalesItemForm extends JDialog{
 			    private JTextField invoiceLineItemNumberField;
 			    private JTextField invoiceNumberField;
 			    private JTextField purchasedQtyField;
-			    private JTextField productIDField;
+			    private JTextField serviceItemField;
 			    private JButton confirmButton;
 			    private JButton cancelButton;
 			    
@@ -52,14 +52,7 @@ public class SalesItemForm extends JDialog{
 			    
 			    private InvoiceLineItem invoiceLineItem = new InvoiceLineItem();
 			    
-			    /**
-			     * Constructor to build dialog box for data entry for new add
-			     * @param parent	this is the frame that called the form
-			     * @param title		title of the form
-			     * @param modal		boolean to block all other input on other windows until current one is closed.
-			     * @param invoiceNumberInput  brings in the invoice number of the selected invoice.
-			     * Written by Michael Meesseman
-			     */
+			    
 			    public SalesItemForm(java.awt.Frame parent, String title, boolean modal, String invoiceNumberInput) {
 			        super(parent, title, modal);
 			        invoiceNumber = invoiceNumberInput;
@@ -69,19 +62,12 @@ public class SalesItemForm extends JDialog{
 			        //this.employeeID = employeeID;
 			        initComponents(invoiceNumberInput);
 			        
-			     // Added by Rick
+			     
 			        writerDAO = DAOFactory.getWriterDAO();
 			        readerDAO = DAOFactory.getReaderDAO();
 			    }
 			    
-			    /**
-			     * Constructor to build dialog box for data entry for edit
-			     * @param parent	this is the frame that called the form
-			     * @param title		title of the form
-			     * @param modal		boolean to block all other input on other windows until current one is closed.
-			     * @param invoiceLineItem	InvoiceLineItem object to fill fields for edit.
-			     * Written by Michael Meesseman
-			     */
+			    
 			    public SalesItemForm(java.awt.Frame parent, String title, boolean modal, InvoiceLineItem invoiceLineItem) {
 			        this(parent, title, modal, title);
 			        this.invoiceLineItem = invoiceLineItem;
@@ -89,7 +75,7 @@ public class SalesItemForm extends JDialog{
 			        invoiceLineItemNumberField.setText(invoiceLineItem.getInvoiceLineNumber());
 			        invoiceNumberField.setText(invoiceLineItem.getInvoiceNumber());
 			        purchasedQtyField.setText(invoiceLineItem.getQuantityPurchased());
-			        productIDField.setText(invoiceLineItem.getProductID());
+			        serviceItemField.setText(invoiceLineItem.getServiceItem());
 			        
 			        //fields cannot be edited. 
 			        invoiceLineItemNumberField.setEditable(false);
@@ -97,10 +83,7 @@ public class SalesItemForm extends JDialog{
 			        
 			        }
 			    
-			    /**
-			     * Method to initialize all components.
-			     * Written by Michael Meesseman
-			     */
+			    
 			    private void initComponents(String invoiceNumberInput) {
 			    	
 			    	//focus listeners to remove red text after validation
@@ -127,11 +110,11 @@ public class SalesItemForm extends JDialog{
 							checkField(purchasedQtyField);
 						}
 					});
-			        productIDField = new JTextField();
-			        productIDField.addFocusListener(new FocusAdapter() {
+			        serviceItemField = new JTextField();
+			        serviceItemField.addFocusListener(new FocusAdapter() {
 						@Override
 						public void focusGained(FocusEvent arg0) {
-							checkField(productIDField);
+							checkField(serviceItemField);
 						}
 					});
 			        cancelButton = new JButton();
@@ -151,8 +134,8 @@ public class SalesItemForm extends JDialog{
 			        invoiceNumberField.setMinimumSize(longField);
 			        purchasedQtyField.setPreferredSize(longField);
 			        purchasedQtyField.setMinimumSize(longField);
-			        productIDField.setPreferredSize(longField);
-			        productIDField.setMinimumSize(longField);
+			        serviceItemField.setPreferredSize(longField);
+			        serviceItemField.setMinimumSize(longField);
 			        
 			        
 			        //cancel button
@@ -183,8 +166,8 @@ public class SalesItemForm extends JDialog{
 			        salesItemPanel.add(invoiceNumberField, getConstraints(1, 1, GridBagConstraints.LINE_START));
 			        salesItemPanel.add(new JLabel("Purchased Quantity:"), getConstraints(0, 2, GridBagConstraints.LINE_END));
 			        salesItemPanel.add(purchasedQtyField, getConstraints(1, 2, GridBagConstraints.LINE_START));
-			        salesItemPanel.add(new JLabel("Product ID:"), getConstraints(0, 3, GridBagConstraints.LINE_END));
-			        salesItemPanel.add(productIDField, getConstraints(1, 3, GridBagConstraints.LINE_START));
+			        salesItemPanel.add(new JLabel("Service Item:"), getConstraints(0, 3, GridBagConstraints.LINE_END));
+			        salesItemPanel.add(serviceItemField, getConstraints(1, 3, GridBagConstraints.LINE_START));
 			        
 			        JPanel buttonPanel = new JPanel();
 			        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -197,14 +180,7 @@ public class SalesItemForm extends JDialog{
 			        pack();
 			    }
 			    
-			    /**
-			     * Method for setting grid of labels and fields.
-			     * @param x			x axis
-			     * @param y			y axis
-			     * @param anchor	where the field sits in the grid space ex. LINE_START or LINE_END.
-			     * @return c	GridBagConstraints variable for constraints on the grid.
-			     * Written by Michael Meesseman
-			     */
+			   
 			    private GridBagConstraints getConstraints(int x, int y, int anchor) {
 			        GridBagConstraints c = new GridBagConstraints();
 			        c.insets = new Insets(5,5,0,5);
@@ -214,22 +190,12 @@ public class SalesItemForm extends JDialog{
 			        return c;
 			    }
 			    
-			    /**
-			     * Method executes when cancel button is pressed.
-			     * Written by Michael Meesseman
-			     */
 			    private void cancelButtonActionPerformed() {
 			        dispose();
 			    }
 			    
-			    /**
-			     * Method executes when add or save button is pressed
-			     * @exception SQLException	exception for database queries.
-			     * Written by Michael Meesseman
-			     */
 			    private void confirmButtonActionPerformed() throws SQLException {
 			        
-			    	// Added by Rick
 			    	processData();
 			    	
 			    	
@@ -245,45 +211,22 @@ public class SalesItemForm extends JDialog{
 			  
 			    }
 			    
-			    //Added by Rick
-			    /**
-			     * Method processes data for the add and save buttons.  
-				 * Method also validates data before adding to the database
-			     * Written by Rick Stuart
-			     */
 			    private void processData() {
 			    	
 			    	//verifies fields not empty
 			    	String purchasedQuantity = verifyEntry(purchasedQtyField);
-			    	String productID = verifyEntry(productIDField);
+			    	String serviceItem = verifyEntry(serviceItemField);
 			    	
 
 			    	//verifies qty is in stock before sale.
+	
 			    	
-			    	
-			    	boolean inStock = false;
-			    	
-			    	
-			    	
-			    	
-			    	if(dataEntered  && ValidateInteger.validateInteger(purchasedQtyField, this) && inStock) {
-
-			    	System.out.println("In SalesItemForm - processData");
-			    	System.out.println("dataEntered: " + dataEntered);
-			    	//writerDAO.manageEnteringToAccountingSales(invoiceNumber, purchasedQuantity, productID);
 			    		dispose();
 			    	
-			    	}
+			    	
 			    	
 			    }
 			    
-			 // Added by Rick
-			    /**
-			     * Method validate field is not empty. 
-			     * turns box red and enters text "Data Missing" when a field is empty.
-			     * @param name		Textfield being validated.
-			     * Written by Rick Stuart
-			     */
 			    private String verifyEntry(JTextField name) {
 			    	String dataItem = "";
 			    	boolean valid = true;
@@ -303,11 +246,7 @@ public class SalesItemForm extends JDialog{
 			    }
 			   
 			
-			    /**
-				 * Checks that the Text Field held the Data Missing message before resetting the color.
-				 * @param name					JTextField name to be checked.
-				 */
-				private void checkField(JTextField name) {			
+			    	private void checkField(JTextField name) {			
 					if(name.getText().equals("Data Missing")) {  
 						name.setText("");
 						name.setForeground(Color.BLACK);

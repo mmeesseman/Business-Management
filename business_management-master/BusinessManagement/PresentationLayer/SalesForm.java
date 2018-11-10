@@ -28,6 +28,9 @@ import javax.swing.WindowConstants;
 import BusinessLayer.Invoice;
 import DatabaseLayer.DAOFactory;
 import DatabaseLayer.WriterDAO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * Class extends JDialog for sales data entry
@@ -40,9 +43,14 @@ public class SalesForm extends JDialog{
 				    private JTextField dateField;
 				    private JTextField timeField;
 				    private JTextField customerIDField;
+                                    private JButton customerLookUpButton;
 				    private JTextField employeeIDField;
+                                    private JButton employeeLookUpButton;
+                                    private JTextField notesField;
+                                    private JTextField commentsField;
 				    private JButton confirmButton;
 				    private JButton cancelButton;
+                                    private String selectedCustomerLookup;
 				    
 				  //Added by Rick
 				    private boolean dataEntered = true;
@@ -50,47 +58,35 @@ public class SalesForm extends JDialog{
 				    
 				    private Invoice invoice = new Invoice();
 				    
-				    /**
-				     * Constructor to build dialog box for data entry for new add
-				     * @param parent	this is the frame that called the form
-				     * @param title		title of the form
-				     * @param modal		boolean to block all other input on other windows until current one is closed.
-				     * Written by Michael Meesseman
-				     */
+				    
 				    public SalesForm(java.awt.Frame parent, String title, boolean modal) {
 				        super(parent, title, modal);
 				        initComponents();
 				        
-				        // Added by Rick
+				        
 				        writerDAO = DAOFactory.getWriterDAO();
 				    }
 				    
-				    /**
-				     * Constructor to build dialog box for data entry for edit
-				     * @param parent	this is the frame that called the form
-				     * @param title		title of the form
-				     * @param modal		boolean to block all other input on other windows until current one is closed.
-				     * @param invoice	Invoice object to fill fields for edit.
-				     * Written by Michael Meesseman
-				     */
+				    
 				    public SalesForm(java.awt.Frame parent, String title, boolean modal, Invoice invoice) {
 				        this(parent, title, modal);
 				        this.invoice = invoice;
 				        confirmButton.setText("Save");
+                                        customerLookUpButton.setText("Customer Lookup");
+                                        employeeLookUpButton.setText("Employee Lookup");
 				        invoiceNumberField.setText(invoice.getInvoiceNumber());
 				        dateField.setText(invoice.getDate());
 				        timeField.setText(invoice.getTime());
 				        customerIDField.setText(invoice.getCustomerID());
 				        employeeIDField.setText(invoice.getEmployeeID());
+                                        notesField.setText(invoice.getNotes());
+                                        commentsField.setText(invoice.getComments());
 				        
 				        //field cannot be edited. 
 				        invoiceNumberField.setEditable(false);
 				        }
 				    
-				    /**
-				     * Method to initialize all components.
-				     * Written by Michael Meesseman
-				     */
+				   
 				    private void initComponents() {
 				    	
 				    	//focus listeners to remove red text after validation
@@ -125,7 +121,23 @@ public class SalesForm extends JDialog{
 								checkField(employeeIDField);
 							}
 						});
+                                        notesField = new JTextField();
+				        notesField.addFocusListener(new FocusAdapter() {
+							@Override
+							public void focusGained(FocusEvent arg0) {
+								checkField(notesField);
+							}
+						});
+                                        commentsField = new JTextField();
+				        commentsField.addFocusListener(new FocusAdapter() {
+							@Override
+							public void focusGained(FocusEvent arg0) {
+								checkField(commentsField);
+							}
+						});
 				        
+                                        customerLookUpButton = new JButton();
+                                        employeeLookUpButton = new JButton();
 				        cancelButton = new JButton();
 				        confirmButton = new JButton();
 				        
@@ -146,6 +158,11 @@ public class SalesForm extends JDialog{
 				        customerIDField.setMinimumSize(longField);
 				        employeeIDField.setPreferredSize(longField);
 				        employeeIDField.setMinimumSize(longField);
+                                        notesField.setPreferredSize(longField);
+				        notesField.setMinimumSize(longField);
+                                        commentsField.setPreferredSize(longField);
+				        commentsField.setMinimumSize(longField);
+                                        
 				        
 				        //cancel button
 				        cancelButton.setText("Cancel");
@@ -164,6 +181,31 @@ public class SalesForm extends JDialog{
 								e.printStackTrace();
 							}
 				        });
+                                        
+                                        //customer lookup
+                                        customerLookUpButton.setText("Customer Lookup");
+                                        customerLookUpButton.addActionListener((ActionEvent) -> {
+                                            try {
+                                                customerLookUpButtonActionPerformed();
+                                            } catch(SQLException e) {
+                                                e.printStackTrace();
+                                            }   catch (UnsupportedLookAndFeelException ex) {
+                                                    Logger.getLogger(SalesForm.class.getName()).log(Level.SEVERE, null, ex);
+                                                } catch (InterruptedException ex) {
+                                                    Logger.getLogger(SalesForm.class.getName()).log(Level.SEVERE, null, ex);
+                                                }
+                                        });
+                                        
+                                        employeeLookUpButton.setText("Employee Lookup");
+                                        employeeLookUpButton.addActionListener((ActionEvent) -> {
+                                            try {
+                                                employeeLookUpButtonActionPerformed();
+                                            } catch(SQLException e) {
+                                                e.printStackTrace();
+                                            }   catch (UnsupportedLookAndFeelException ex) {
+                                                    Logger.getLogger(SalesForm.class.getName()).log(Level.SEVERE, null, ex);
+                                                }
+                                        });
 				        
 				     // grid layout for labels and fields
 				        JPanel salesPanel = new JPanel();
@@ -176,8 +218,14 @@ public class SalesForm extends JDialog{
 				        salesPanel.add(timeField, getConstraints(1, 2, GridBagConstraints.LINE_START));
 				        salesPanel.add(new JLabel("Customer ID:"), getConstraints(0, 3, GridBagConstraints.LINE_END));
 				        salesPanel.add(customerIDField, getConstraints(1, 3, GridBagConstraints.LINE_START));
+                                        salesPanel.add(customerLookUpButton, getConstraints(2,3, GridBagConstraints.LINE_START));
 				        salesPanel.add(new JLabel("Employee ID:"), getConstraints(0, 4, GridBagConstraints.LINE_END));
 				        salesPanel.add(employeeIDField, getConstraints(1, 4, GridBagConstraints.LINE_START));
+                                        salesPanel.add(employeeLookUpButton, getConstraints(2,4, GridBagConstraints.LINE_START));
+                                        salesPanel.add(new JLabel("Notes:"), getConstraints(0, 5, GridBagConstraints.LINE_END));
+				        salesPanel.add(notesField, getConstraints(1, 5, GridBagConstraints.LINE_START));
+                                        salesPanel.add(new JLabel("Comments:"), getConstraints(0, 6, GridBagConstraints.LINE_END));
+				        salesPanel.add(commentsField, getConstraints(1, 6, GridBagConstraints.LINE_START));
 				        
 				        JPanel buttonPanel = new JPanel();
 				        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -190,14 +238,6 @@ public class SalesForm extends JDialog{
 				        pack();
 				    }
 				    
-				    /**
-				     * Method for setting grid of labels and fields.
-				     * @param x			x axis
-				     * @param y			y axis
-				     * @param anchor	where the field sits in the grid space ex. LINE_START or LINE_END.
-				     * @return c	GridBagConstraints variable for constraints on the grid.
-				     * Written by Michael Meesseman
-				     */
 				    private GridBagConstraints getConstraints(int x, int y, int anchor) {
 				        GridBagConstraints c = new GridBagConstraints();
 				        c.insets = new Insets(5,5,0,5);
@@ -207,22 +247,15 @@ public class SalesForm extends JDialog{
 				        return c;
 				    }
 				    
-				    /**
-				     * Method executes when cancel button is pressed.
-				     * Written by Michael Meesseman
-				     */
+				    
 				    private void cancelButtonActionPerformed() {
 				        dispose();
 				    }
 				    
-				    /**
-				     * Method executes when add or save button is pressed
-				     * @exception SQLException	exception for database queries.
-				     * Written by Michael Meesseman
-				     */
+				   
 				    private void confirmButtonActionPerformed() throws SQLException {
 				        
-				    	// Added by Rick
+				    	
 				    	processData();
 				    	
 				    	if(dataEntered) {
@@ -235,13 +268,23 @@ public class SalesForm extends JDialog{
 				    	dataEntered = true;
 				   
 				    }
+                                    
+                                    private void customerLookUpButtonActionPerformed() throws SQLException, UnsupportedLookAndFeelException, InterruptedException {
+                                        String lookup = "lookup";
+                                        CustomerInformationFrame customerLookUp = new CustomerInformationFrame(lookup);
+                                        selectedCustomerLookup = customerLookUp.getSelectedCustomerId();
+                                        customerIDField.setText(selectedCustomerLookup);
+                                        customerLookUp.dispose();
+                                    }
+                                    
+                                    private void employeeLookUpButtonActionPerformed() throws SQLException, UnsupportedLookAndFeelException {
+                                        
+                                        EmployeeFrame employeeFrame = new EmployeeFrame();
+                                        employeeFrame.setLocationRelativeTo(this);
+                                        employeeFrame.setVisible(true);
+                                    }
 				    
-				    // Added by Rick
-				    /**
-				     * Method processes data for the add and save buttons.  
-					 * Method also validates data before adding to the database
-				     * Written by Rick Stuart
-				     */
+				    
 				    private void processData() {
 				    	
 				    	//verifies fields not empty.
@@ -249,6 +292,8 @@ public class SalesForm extends JDialog{
 				    	String time = verifyEntry(timeField);
 				    	String customerID = verifyEntry(customerIDField);
 				    	String employeeID = verifyEntry(employeeIDField);
+                                        String notes = verifyEntry(notesField);
+                                        String comments = verifyEntry(commentsField);
 				    	
 				    	
 				    	System.out.println("In SalesForm - processData");
@@ -272,7 +317,7 @@ public class SalesForm extends JDialog{
 					                    "Invalid Employee ID", JOptionPane.INFORMATION_MESSAGE);
 				    		
 				    		if(validCustomer && validEmployee) {
-				    			writerDAO.createInvoice(date, time, customerID, employeeID);
+				    			writerDAO.createInvoice(date, time, customerID, employeeID, notes, comments);
 				    			
 				    			// Notify user that addition was successful
 				    			dispose();
@@ -288,13 +333,7 @@ public class SalesForm extends JDialog{
 				    	}
 				    }
 				    
-				 // Added by Rick
-				    /**
-				     * Method validate field is not empty. 
-				     * turns box red and enters text "Data Missing" when a field is empty.
-				     * @param name		Textfield being validated.
-				     * Written by Rick Stuart
-				     */
+				 
 				    private String verifyEntry(JTextField name) {
 				    	String dataItem = "";
 				    	boolean valid = true;
@@ -314,11 +353,7 @@ public class SalesForm extends JDialog{
 				    	return dataItem;
 				    }
 				 
-				    /**
-					 * Checks that the Text Field held the Data Missing message before resetting the color.
-					 * @param name					JTextField name to be checked.
-					 */
-					private void checkField(JTextField name) {			
+				    	private void checkField(JTextField name) {			
 						if(name.getText().equals("Data Missing")) {  
 							name.setText("");
 							name.setForeground(Color.BLACK);

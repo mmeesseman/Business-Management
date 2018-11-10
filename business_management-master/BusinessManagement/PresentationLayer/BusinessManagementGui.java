@@ -8,6 +8,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import DatabaseLayer.*;
 import BusinessLayer.*;
+import DatabaseLayer.DAOFactory;
+import PresentationLayer.LoginFrame;
 
 
 public class BusinessManagementGui {

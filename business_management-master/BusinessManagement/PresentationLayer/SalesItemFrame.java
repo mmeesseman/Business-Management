@@ -16,11 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-/**
- * Extends JFrame to build a frame for sales invoice items tracking.
- * Calls several methods to build the frame.
- * Written by Michael Meesseman
- */
+
 public class SalesItemFrame extends JFrame{
 	
 	//table initalization
@@ -34,12 +30,7 @@ public class SalesItemFrame extends JFrame{
 	    private JTextField searchField;
 	    private JComboBox searchCombo;
 	    
-	    /**
-	     * Constructor to build the frame.
-	     * @exception UnsupportedLookAndFeelException	Handles multiple operating system configs.
-	     * @exception SQLException	exception for database queries.
-	     * Written by Michael Meesseman
-	     */
+	    
 	    public SalesItemFrame(String invoiceNumberInput) throws UnsupportedLookAndFeelException, SQLException {
 	        try {
 	            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
@@ -63,12 +54,7 @@ public class SalesItemFrame extends JFrame{
 	                
 	    }
 	    
-	    /**
-	     * Method to build the Button Panel.
-	     * @return panel	this is the button panel that goes to the SOUTH of the frame.
-	     * @exception SQLException	exception for database queries.
-	     * Written by Michael Meesseman
-	     */
+	    
 	    private JPanel buildButtonPanel() throws SQLException {
 	        JPanel panel = new JPanel();
 	        
@@ -106,20 +92,14 @@ public class SalesItemFrame extends JFrame{
 	        
 	    }
 	    
-	    /**
-	     * Method executes when add button is pressed
-	     * Written by Michael Meesseman
-	     */
+	    
 	    private void doAddButton() {
 	    	SalesItemForm salesItemForm = new SalesItemForm(this, "Add Sales Item", true, invoiceNumberInput);
 	        salesItemForm.setLocationRelativeTo(this);
 	        salesItemForm.setVisible(true);
 	    }
 	    
-	    /**
-	     * Method executes when help button is pressed.
-	     * Written by Michael Meesseman
-	     */
+	    
 	    private void doHelpButton()
 	    {
 	    	JOptionPane.showMessageDialog(this, "Press the 'Add' button to add a sales item. \n"
@@ -129,22 +109,13 @@ public class SalesItemFrame extends JFrame{
 	    }
 	    
 	   
-	    /**
-	     * Method to refresh the table from the database.
-	     * @exception SQLException	exception for database queries.
-	     * Written by Michael Meesseman
-	     */
+	    
 	    public void fireDatabaseUpdatedEvent() throws SQLException
 	    {
 	        ((SalesItemTableModel) salesItemTableModel).databaseUpdated();
 	    }
 	       
-	    /**
-	     * Method to build the frame table that goes in center.
-	     * @return table	JTable to populate database results
-	     * @exception SQLException	exception for database queries.
-	     * Written by Michael Meesseman
-	     */
+	    
 	    private JTable buildSalesTable() throws SQLException {
 	        salesItemTableModel = new SalesItemTableModel(invoiceNumberInput);
 	        JTable table = new JTable((javax.swing.table.TableModel) salesItemTableModel);
@@ -153,16 +124,11 @@ public class SalesItemFrame extends JFrame{
 	        return table;
 	    }
 	
-	    /**
-		    * Method to build the search panel.
-		    * @return panel	panel which populates the NORTH end of frame.
-		    * Written by Michael Meesseman
-		    */
 	    private JPanel buildSearchPanel() {
 	 	   
 	    	// drop down box fields
 	 	   String[] fields = {"Invoice Line Number", "Invoice Number", 
-				  	"Quantity Purchased", "Product ID"};
+				  	"Quantity Purchased", "Service Item"};
 	 	   
 	 	   JPanel panel = new JPanel();
 	 	   
@@ -194,11 +160,7 @@ public class SalesItemFrame extends JFrame{
 	 	   return panel;
 	    }
 	    
-	    /**
-		    * Method executes when search button is pressed
-		    * @exception SQLException	exception for database queries.
-		    * Written by Michael Meesseman
-		    */
+	    
 	    private void doSearchButton() throws SQLException {
 	 	   
 	 	   String column;
@@ -216,7 +178,7 @@ public class SalesItemFrame extends JFrame{
 	 		   column = "quantity_purchased";
 	 		   break;
 	 	   case 3:
-	 		   column = "product_product";
+	 		   column = "service_item";
 	 		   break;
 	 	   default:
 	 		   column = "";

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import DatabaseLayer.WriterDAO;
 
 
 
@@ -103,14 +104,14 @@ public class DatabaseWriter implements WriterDAO {
 	}
 	
 	
-	public void createInvoice(String date, String time, String customerID, String employeeID) {
+	public void createInvoice(String date, String time, String customerID, String employeeID, String notes, String comments) {
 		
 		String newInvoiceUpdate = null;
 		
 		newInvoiceUpdate = "insert into invoice " +
 				"(invoice_number, date, time, customer_customer_id, employee_employee_id) " +
 				"values (DEFAULT, '" + date + "', '" + time + "', '" + customerID + "', '" +
-				employeeID + "');";
+				employeeID + "', '" + notes + "', '" + comments + "',);";
 		
 		Statement stmt = null;
 		
@@ -128,15 +129,15 @@ public class DatabaseWriter implements WriterDAO {
 	}
 	
 	public void createInvoiceLineItem(String invoiceNum, String quantityPurchased,
-			String productID) {
+			String serviceItem) {
 		
 		String newInvoiceLineItemUpdate = null;
 		
 		newInvoiceLineItemUpdate = "insert into invoice_line_item " +
 				"(invoice_line_number, invoice_invoice_number, quantity_purchased, " +
-				"product_product) " +
+				"service_item) " +
 				"values (DEFAULT, '" + invoiceNum + "', '" + quantityPurchased +
-				"', '" + productID + "');";
+				"', '" + serviceItem + "');";
 		
 		Statement stmt = null;
 		
@@ -292,5 +293,7 @@ public class DatabaseWriter implements WriterDAO {
 		writerHelper.editCompany(companyID, companyName);
 		
 	}
+
+
 	
 }

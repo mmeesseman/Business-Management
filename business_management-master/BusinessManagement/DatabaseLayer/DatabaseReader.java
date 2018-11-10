@@ -253,6 +253,8 @@ public class DatabaseReader implements ReaderDAO {
 				String time = rs.getString(3);
 				String customerID = rs.getString(4);
 				String employeeID = rs.getString(5);
+                                String notes = rs.getString(6);
+                                String comments = rs.getString(7);
 		
 				Invoice i = new Invoice();
 				i.setInvoiceNumber(invoiceNumber);
@@ -260,6 +262,8 @@ public class DatabaseReader implements ReaderDAO {
 				i.setTime(time);
 				i.setCustomerID(customerID);
 				i.setEmployeeID(employeeID);
+                                i.setNotes(notes);
+                                i.setComments(comments);
 			
 				invoices.add(i);
 			}
@@ -290,13 +294,13 @@ public class DatabaseReader implements ReaderDAO {
 				String invoiceLineNumber = rs.getString(1);
 				String invoiceNumber = rs.getString(2);
 				String quantityPurchased = rs.getString(3);
-				String productID = rs.getString(4);
+				String serviceItem = rs.getString(4);
 			
 				InvoiceLineItem i = new InvoiceLineItem();
 				i.setInvoiceLineNumber(invoiceLineNumber);
 				i.setInvoiceNumber(invoiceNumber);
 				i.setQuantityPurchased(quantityPurchased);
-				i.setProductID(productID);
+				i.setServiceItem(serviceItem);
 			
 			
 				invoiceLineItems.add(i);
@@ -471,13 +475,13 @@ public class DatabaseReader implements ReaderDAO {
 				String invoiceLineNumber = rs.getString(1);
 				String invoiceNumber = rs.getString(2);
 				String quantityPurchased = rs.getString(3);
-				String productID = rs.getString(4);
+				String serviceItem = rs.getString(4);
 			
 				InvoiceLineItem i = new InvoiceLineItem();
 				i.setInvoiceLineNumber(invoiceLineNumber);
 				i.setInvoiceNumber(invoiceNumber);
 				i.setQuantityPurchased(quantityPurchased);
-				i.setProductID(productID);
+				i.setServiceItem(serviceItem);
 				
 			
 				invoiceLineItems.add(i);
@@ -511,6 +515,8 @@ public class DatabaseReader implements ReaderDAO {
 				String time = rs.getString(3);
 				String customerID = rs.getString(4);
 				String employeeID = rs.getString(5);
+                                String notes = rs.getString(6);
+                                String comments = rs.getString(7);
 		
 				Invoice i = new Invoice();
 				i.setInvoiceNumber(invoiceNumber);
@@ -518,6 +524,8 @@ public class DatabaseReader implements ReaderDAO {
 				i.setTime(time);
 				i.setCustomerID(customerID);
 				i.setEmployeeID(employeeID);
+                                i.setNotes(notes);
+                                i.setComments(comments);
 			
 				invoices.add(i);
 			}
@@ -725,7 +733,7 @@ public class DatabaseReader implements ReaderDAO {
 	}
 	
 	
-	public String obtainLineItemID(String invoiceID, String quantityPurchased, String productID) {
+	public String obtainLineItemID(String invoiceID, String quantityPurchased, String serviceItem) {
 		
 		String lineID = "";
 		String query = null;
@@ -734,7 +742,7 @@ public class DatabaseReader implements ReaderDAO {
 		query = "select invoice_line_number " +
 				"from invoice_line_item " +
 				"where invoice_invoice_number = '" + invoiceID + "' and quantity_purchased = '" +
-				quantityPurchased + "' and product_product = '" + productID + "';";
+				quantityPurchased + "' and service_item = '" + serviceItem + "';";
 		
 		Statement stmt = null;  
 		
@@ -758,7 +766,7 @@ public class DatabaseReader implements ReaderDAO {
 	
 
 	public String obtainInvoiceLineID(String invoiceNumber, String purchasedQuantity,
-			String productID) {
+			String serviceItem) {
 		
 		String lineNumber = "";
 		
@@ -769,7 +777,7 @@ public class DatabaseReader implements ReaderDAO {
 				+ "FROM invoice_line_item "
 				+ "WHERE invoice_invoice_number = '" + invoiceNumber 
 				+ "' AND quantity_purchased = '" + purchasedQuantity 
-				+ "' AND product_product = '" + productID + "';";
+				+ "' AND service_item = '" + serviceItem + "';";
 		
 		Statement stmt = null;
 		
@@ -790,4 +798,9 @@ public class DatabaseReader implements ReaderDAO {
 		
 		return lineNumber;
 	}
+
+    @Override
+    public String obtainNewInvoiceNumber(String date, String time, String customerID, String employeeID, String notes, String comments) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

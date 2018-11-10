@@ -16,11 +16,11 @@ public interface DataWriter {
 	
 	
 	public void createInvoice(String date, String time, String customerID,
-			String employeeID);
+			String employeeID, String notes, String comments);
 	
 	// copy from writeHelper due to gui changes
 	public void createInvoiceLineItem(String invoiceNumber, String purchasedQuantity,
-			String productID);
+			String serviceItem);
 	
 	//New for different gui
 	public boolean checkCompanyExists(String companyID);
